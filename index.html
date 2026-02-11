@@ -3,21 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aruba ↔ Cisco Config Converter</title>
+  <title>Aruba to Cisco Config Converter</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Aruba ↔ Cisco Config Converter</h1>
+    <h1>Switch Config Tool</h1>
 
-    <label for="direction">Conversion Direction:</label>
-    <select id="direction">
-      <option value="aruba-to-cisco">Aruba ➡ Cisco</option>
-      <option value="cisco-to-aruba">Cisco ➡ Aruba</option>
+    <label for="mode">Mode:</label>
+    <select id="mode" onchange="updateModeFields()">
+      <option value="convert6100">Cisco to Aruba 6100</option>
+      <option value="convert">Cisco to HP 25XX</option>
+      <option value="convertHP2520ToAruba6100">HP 2520 to Aruba 6100</option>
+      <option value="full">Full HP Build</option>
+      <option value="aruba">Aruba VLAN and Interface Config</option>
+      <option value="cisco">Cisco VLAN and Interface Config</option>
     </select>
 
-    <textarea id="input" placeholder="Paste your config here..."></textarea>
+    <div id="fullFields" style="display:none; margin-top: 10px;">
+      <label for="switchType">Switch Type:</label>
+      <select id="switchType">
+        <option value="1">HP 2520</option>
+        <option value="2">HP 2530</option>
+        <option value="3">Other</option>
+      </select>
+
+      <label for="hostname">Hostname:</label>
+      <input id="hostname" type="text" placeholder="switch-hostname" />
+
+      <label for="defaultGateway">Default Gateway:</label>
+      <input id="defaultGateway" type="text" placeholder="172.18.0.1" />
+
+      <label for="switchLoc">Switch Location:</label>
+      <input id="switchLoc" type="text" placeholder="MDF Closet A" />
+    </div>
+
+    <div id="jsonFields" style="display:none; margin-top: 10px;">
+      <label for="vlansJson">VLANs JSON:</label>
+      <textarea id="vlansJson" placeholder='[{"number":"10","name":"USERS","untagged":"1-10","tagged":"24"}]'></textarea>
+
+      <label for="interfacesJson">Interfaces JSON:</label>
+      <textarea id="interfacesJson" placeholder='[{"number":"1","description":"AP-01","poe":"1"}]'></textarea>
+    </div>
+
+    <label for="input">Input Config:</label>
+    <textarea id="input" placeholder="Paste source config or leave empty for form-based modes..."></textarea>
+
     <button onclick="convert()">Convert</button>
+
+    <label for="output">Output:</label>
     <textarea id="output" placeholder="Converted config will appear here..." readonly></textarea>
   </div>
 
